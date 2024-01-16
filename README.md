@@ -13,7 +13,7 @@ pip install transformers=4.36.2 sentencepiece
 git clone https://github.com/schwartz-lab-NLP/TOVA.git
 ```
 
-Next, use the following example code (currently supports llama and mistral only):
+Next, use the following example code (currently supports LLaMA and Mistral only):
 ```python
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from TOVA import TOVACache, enable_tova_caching
