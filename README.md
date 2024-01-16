@@ -26,6 +26,7 @@ input_ids = tokenizer(prompt, return_tensors="pt").input_ids
 
 # use TOVA
 enable_tova_caching(model)
+multi_state_size = 512
 cache = TOVACache(multi_state_size)
 
 output = model.generate(input_ids, past_key_values=cache)
