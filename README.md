@@ -38,7 +38,7 @@ output = model.generate(input_ids, past_key_values=cache)
       title={Transformers are Multi-State RNNs}, 
       author={Matanel Oren and Michael Hassid and Yossi Adi and Roy Schwartz},
       year={2024},
-      note = {{arXiv}:401.06104},
-      url = {https://arxiv.org/abs/401.06104},
+      note = {{arXiv}:2401.06104},
+      url = {https://arxiv.org/abs/2401.06104},
       eprint={2401.06104},
 }
