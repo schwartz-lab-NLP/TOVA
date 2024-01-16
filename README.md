@@ -1,34 +1,44 @@
 # TOVA
-Token Omission Via Attention
+This repository contains the code for the paper: [Transformers are Multi-State RNNs](https://arxiv.org/abs/2401.06104) by Matenel Oren*, Michael Hassid*, Yossi Adi and Roy Schwartz.
 
-This is the code for the paper "Transformers are Multi-State RNNs" Link to Arxiv.
+<p align="center">
+  <img src="fig1_tova.png" width="50%" height="50%">
+</p>
 
+## How to use
 
-BASH commands:
-
+First set the enviroment:
+```bash
 pip install transformers=4.36.2 sentencepiece
-
 git clone https://github.com/schwartz-lab-NLP/TOVA.git
+```
 
-Python script:
-
-Rreparation:
-
-prompt = "Once upon a time"
-
-model = 
-tokenizer = 
-
-input_ids = tokenizer(prompt, return_tensors="pt").input_ids
-
-Run ours:
-
+Next, use the following example code (currently supports llama and mistral only):
+```python
+from transformers import AutoTokenizer, AutoModelForCausalLM
 from TOVA import TOVACache, enable_tova_caching
 
+tokenizer = AutoTokenizer.from_pretrained("your_model")
+model = AutoModelForCausalLM.from_pretrained("your_model")
+
+prompt = "Enter your prompt here"
+input_ids = tokenizer(prompt, return_tensors="pt").input_ids
+
+# use TOVA
 enable_tova_caching(model)
-
-multi_state_size = 128
-
 cache = TOVACache(multi_state_size)
 
 output = model.generate(input_ids, past_key_values=cache)
+```
+
+
+## Citation
+```
+@misc{oren2024transformers,
+      title={Transformers are Multi-State RNNs}, 
+      author={Matanel Oren and Michael Hassid and Yossi Adi and Roy Schwartz},
+      year={2024},
+      note = {{arXiv}:401.06104},
+      url = {https://arxiv.org/abs/401.06104},
+      eprint={2401.06104},
+}
