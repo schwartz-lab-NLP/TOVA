@@ -3,8 +3,8 @@ import types
 from transformers.models.llama.modeling_llama import LlamaForCausalLM, LlamaAttention
 from transformers.models.mistral.modeling_mistral import MistralForCausalLM, MistralAttention
 
-from convert_models.llama_custom import tova_llama_attention_forward, tova_llama_prepare_inputs_for_generation_generation
-from convert_models.mistral_custom import tova_mistral_attention_forward, tova_mistral_prepare_inputs_for_generation_generation
+from .llama_custom import tova_llama_attention_forward, tova_llama_prepare_inputs_for_generation_generation
+from .mistral_custom import tova_mistral_attention_forward, tova_mistral_prepare_inputs_for_generation_generation
 
 
 def enable_tova_caching(model):
