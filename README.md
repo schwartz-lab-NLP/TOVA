@@ -35,10 +35,9 @@ output = model.generate(input_ids, past_key_values=cache)
 ## Citation
 ```
 @misc{oren2024transformers,
-      title={Transformers are Multi-State RNNs}, 
-      author={Matanel Oren and Michael Hassid and Yossi Adi and Roy Schwartz},
-      year={2024},
-      note = {{arXiv}:2401.06104},
-      url = {https://arxiv.org/abs/2401.06104},
-      eprint={2401.06104},
+title={Transformers are Multi-State {RNNs}},
+author={Matanel Oren and Michael Hassid and Yossi Adi and Roy Schwartz},
+year={2024},
+note = {{arXiv}:2401.06104},
+url = {https://arxiv.org/abs/2401.06104},
 }
