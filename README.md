@@ -1,5 +1,5 @@
 # TOVA
-This repository contains the code for the paper: [Transformers are Multi-State RNNs](https://arxiv.org/abs/2401.06104) by Matenel Oren*, Michael Hassid*, Yossi Adi and Roy Schwartz.
+This repository contains the code for the paper: [Transformers are Multi-State RNNs](https://arxiv.org/abs/2401.06104) by Matanel Oren*, Michael Hassid*, Yossi Adi and Roy Schwartz.
 
 <p align="center">
   <img src="fig2_tova.png" width="33%" height="33%">
