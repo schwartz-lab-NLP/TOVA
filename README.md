@@ -9,7 +9,7 @@ This repository contains the code for the paper: [Transformers are Multi-State R
 
 First set the enviroment:
 ```bash
-pip install transformers=4.36.2 sentencepiece
+pip install transformers==4.36.2 sentencepiece
 git clone https://github.com/schwartz-lab-NLP/TOVA.git
 ```
 
