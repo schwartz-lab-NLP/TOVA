@@ -43,7 +43,8 @@ class TOVACache(DynamicCache):
         # Utilize the average attention weights to select the top-k keys and values        
         mean_attn_weights = torch.mean(attn_weights[:, :, -1, :], dim=1).clone().detach()
         vals, ind = torch.topk(mean_attn_weights, k=self.cache_size, dim=-1)
-        expand_ind = ind.unsqueeze(-1).expand(bsz, num_kv_heads, ind.size(-1), self.key_cache[layer_idx].size(-1))
+        ind = torch.sort(ind).values        # stabelizes some things for some reason
+        expand_ind = ind.unsqueeze(1).unsqueeze(-1).expand(bsz, num_kv_heads, ind.size(-1), self.key_cache[layer_idx].size(-1))
 
         # Reduce the size of the cache to self.cache_size
         self.key_cache[layer_idx] = torch.gather(self.key_cache[layer_idx], dim=2, index=expand_ind)
