@@ -32,6 +32,11 @@ cache = TOVACache(multi_state_size)
 output = model.generate(input_ids, past_key_values=cache)
 ```
 
+For Llama only, it is possible to use positional encoding compression to support context limit extrapolation.
+```python
+cache = TOVACache(multi_state_size, position_encoding_compression=True)
+```
+
 
 ## Citation
 ```
