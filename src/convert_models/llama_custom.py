@@ -6,8 +6,9 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 
-from transformers.cache_utils import Cache
-from transformers.models.llama.modeling_llama import apply_rotary_pos_emb, apply_rotary_pos_emb, repeat_kv
+from ..tova_cache import TOVACache
+from .positional_encoding_compression_utils import apply_rotary_pos_emb, get_positional_encoding_indexes
+from transformers.models.llama.modeling_llama import repeat_kv
 
 
 def tova_llama_attention_forward(
@@ -15,7 +16,7 @@ def tova_llama_attention_forward(
         hidden_states: torch.Tensor,
         attention_mask: Optional[torch.Tensor] = None,
         position_ids: Optional[torch.LongTensor] = None,
-        past_key_value: Optional[Cache] = None,
+        past_key_value: Optional[TOVACache] = None,
         output_attentions: bool = False,
         use_cache: bool = False,
         **kwargs,
@@ -62,12 +63,18 @@ def tova_llama_attention_forward(
                 "with a layer index."
             )
         kv_seq_len += past_key_value.get_usable_length(kv_seq_len, self.layer_idx)
-    cos, sin = self.rotary_emb(value_states, seq_len=position_ids[0, -1].item()+1) # changed from the original imp
-    query_states, key_states = apply_rotary_pos_emb(query_states, key_states, cos, sin, position_ids)
 
+    # must be calculated before calling past_key_value.update()
+    is_input_tokens_round = len(past_key_value.cached_input_indexes) <= self.layer_idx
+
+    # Pulling previous from KV Cache, and updating it with new token KV
     if past_key_value is not None:
-        cache_kwargs = {"sin": sin, "cos": cos}  # Specific to RoPE models
-        key_states, value_states = past_key_value.update(key_states, value_states, self.layer_idx, cache_kwargs)
+        key_states, value_states = past_key_value.update(key_states, value_states, self.layer_idx, {}, position_ids)
+
+    # Calculating position encoding indexes and applying RoPE on KQ
+    query_position_indexes, key_position_indexes = get_positional_encoding_indexes(past_key_value, position_ids, self.layer_idx, is_input_tokens_round)
+    cos, sin = self.rotary_emb(value_states, seq_len=position_ids[0, -1].item() + 1)
+    query_states, key_states = apply_rotary_pos_emb(query_states, key_states, cos, sin, query_position_indexes, key_position_indexes)
 
     key_states = repeat_kv(key_states, self.num_key_value_groups)
     value_states = repeat_kv(value_states, self.num_key_value_groups)
@@ -122,7 +129,7 @@ def tova_llama_prepare_inputs_for_generation_generation(
         self, input_ids, past_key_values=None, attention_mask=None, inputs_embeds=None, **kwargs
     ):
     if past_key_values is not None:
-        if isinstance(past_key_values, Cache):
+        if isinstance(past_key_values, TOVACache):
             cache_length = past_key_values.get_seq_length()
             past_length = past_key_values.seen_tokens
             max_cache_length = past_key_values.get_max_length()
