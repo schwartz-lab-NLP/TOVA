@@ -8,6 +8,9 @@ from .mistral_custom import tova_mistral_attention_forward, tova_mistral_prepare
 
 
 def enable_tova_caching(model):
+    if hasattr(model, "model") and hasattr(model.model, "_use_sdpa"):
+        model.model._use_sdpa = False
+    
     if isinstance(model, LlamaForCausalLM):
         model.prepare_inputs_for_generation = types.MethodType(
             tova_llama_prepare_inputs_for_generation_generation, model
